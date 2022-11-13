@@ -1,5 +1,5 @@
 package hkspoilerviewer.api;
 
 public interface RandoServiceInterface {
-  RandoContext getRandoContext();
+  RandoContext getRandoContext(RandoContextRequest request);
 }
