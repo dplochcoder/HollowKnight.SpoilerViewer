@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpoilerViewerMod", "SpoilerViewerMod\SpoilerViewerMod.csproj", "{F5D22B60-53AF-4A69-A0B1-5CC2751C0569}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{9B8B2C4E-9ADA-4C14-B9B9-DC32855A5EAC}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\dependabot.yml = .github\dependabot.yml
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F5D22B60-53AF-4A69-A0B1-5CC2751C0569}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5D22B60-53AF-4A69-A0B1-5CC2751C0569}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5D22B60-53AF-4A69-A0B1-5CC2751C0569}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5D22B60-53AF-4A69-A0B1-5CC2751C0569}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {78E9FAB0-D338-4530-BC44-CD0FA6BBB358}
+	EndGlobalSection
+EndGlobal
