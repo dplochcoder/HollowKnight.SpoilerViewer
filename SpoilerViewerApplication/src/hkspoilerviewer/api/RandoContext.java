@@ -5,11 +5,9 @@ import com.google.common.collect.ImmutableList;
 
 @AutoValue
 public abstract class RandoContext {
-  public abstract String randoContextId();
+  public abstract int id();
 
-  public abstract ImmutableList<ItemsPlacement> itemsPlacements();
-
-  public abstract ImmutableList<TransitionPlacement> transitionPlacements();
+  public abstract ImmutableList<Placement> placements();
 
   public abstract InLogicSetDeltaChain inLogic();
 }
