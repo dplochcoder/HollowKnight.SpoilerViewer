@@ -9,5 +9,5 @@ public abstract class RandoContext {
 
   public abstract ImmutableList<Placement> placements();
 
-  public abstract InLogicSetDeltaChain inLogic();
+  public abstract LogicMapSequence logic();
 }
