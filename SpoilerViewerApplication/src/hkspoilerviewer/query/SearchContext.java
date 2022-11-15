@@ -16,6 +16,23 @@ public abstract class SearchContext {
 
   public abstract RandoContext rando();
 
+  public abstract ImmutableSet<SearchItemKey> allSearchItemKeys();
+
+  public static ImmutableSet<SearchItemKey> calculateKeys(RandoContext rando) {
+    var builder = ImmutableSet.<SearchItemKey>builder();
+    for (var p : rando.placements()) {
+      if (p.location().isShop()) {
+        for (var i : p.items()) {
+          builder.add(SearchItemKey.create(i.placementId()));
+        }
+      } else {
+        builder.add(SearchItemKey.create(p.items().stream().map(ItemPlacement::placementId)
+            .collect(ImmutableSet.toImmutableSet())));
+      }
+    }
+    return builder.build();
+  }
+
   public abstract ImmutableSet<SearchItemKey> bookmarks();
 
   public abstract ImmutableSet<SearchItemKey> hidden();
@@ -55,6 +72,29 @@ public abstract class SearchContext {
   @Memoized
   public LogicMap routeLogicMap() {
     return rando().logic().getByIndex(routePlacementIndex());
+  }
+
+  public abstract Builder toBuilder();
+
+  public static Builder builder() {
+    return new AutoValue_SearchContext.Builder();
+  }
+
+  @AutoValue.Builder
+  public abstract static class Builder {
+    public abstract Builder setRando(RandoContext rando);
+
+    public abstract Builder setAllSearchItemKeys(ImmutableSet<SearchItemKey> allSearchItemKeys);
+
+    public abstract Builder setBookmarks(ImmutableSet<SearchItemKey> bookmarks);
+
+    public abstract Builder setHidden(ImmutableSet<SearchItemKey> hidden);
+
+    public abstract Builder setRoute(ImmutableSet<SearchItemKey> route);
+
+    public abstract Builder setRoutePlacementIndex(int routePlacementIndex);
+
+    public abstract SearchContext build();
   }
 
 }
