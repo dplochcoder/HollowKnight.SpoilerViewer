@@ -58,7 +58,7 @@ public abstract class SearchDocument {
     sb.append(placement().location().name());
 
     // TODO: Costs
-    return ListItemStyle.create(sb.toString(), false, transition());
+    return ListItemStyle.create(sb.toString(), false, false, transition());
   }
 
   // FIXME: Costs
