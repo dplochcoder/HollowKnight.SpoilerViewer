@@ -1,5 +1,11 @@
 package hkspoilerviewer.api;
 
 public interface RandoServiceInterface {
-  RandoContext getRandoContext(RandoContextRequest request);
+  interface Callback<T> {
+    void success(T response);
+
+    void error(Exception e);
+  }
+
+  void getRandoContext(RandoContextRequest request, Callback<RandoContext> cb);
 }

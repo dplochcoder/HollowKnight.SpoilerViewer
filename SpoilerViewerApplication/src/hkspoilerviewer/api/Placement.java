@@ -7,5 +7,13 @@ import com.google.common.collect.ImmutableList;
 public abstract class Placement {
   public abstract Location location();
 
+  public final String name() {
+    return location().name();
+  }
+
+  public final boolean isTransition() {
+    return location().isTransition();
+  }
+
   public abstract ImmutableList<ItemPlacement> items();
 }
