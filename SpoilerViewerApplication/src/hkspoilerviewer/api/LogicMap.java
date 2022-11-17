@@ -7,19 +7,19 @@ import com.google.common.collect.ImmutableMap;
 
 @AutoValue
 public abstract class LogicMap {
-  public abstract ImmutableMap<Integer, Logic> logicByPlacementId();
+  public abstract ImmutableMap<ObtainIndices, Logic> logicByObtainIndices();
 
-  public final Logic logic(int placementId) {
-    return logicByPlacementId().get(placementId);
+  public final Logic logic(ObtainIndices obtainIndices) {
+    return logicByObtainIndices().get(obtainIndices);
   }
 
   public final LogicMap apply(Iterable<LogicMapDelta> deltas) {
-    Map<Integer, Logic> map = new HashMap<>(logicByPlacementId());
-    deltas.forEach(delta -> map.putAll(delta.deltaByPlacementId()));
+    Map<ObtainIndices, Logic> map = new HashMap<>(logicByObtainIndices());
+    deltas.forEach(delta -> map.putAll(delta.deltaByObtainIndices()));
     return create(map);
   }
 
-  public static LogicMap create(Map<Integer, Logic> logicByPlacementId) {
-    return new AutoValue_LogicMap(ImmutableMap.copyOf(logicByPlacementId));
+  public static LogicMap create(Map<ObtainIndices, Logic> logicByObtainIndices) {
+    return new AutoValue_LogicMap(ImmutableMap.copyOf(logicByObtainIndices));
   }
 }

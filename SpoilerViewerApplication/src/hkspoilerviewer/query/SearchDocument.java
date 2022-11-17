@@ -2,41 +2,72 @@ package hkspoilerviewer.query;
 
 import java.util.stream.Collectors;
 import com.google.auto.value.AutoValue;
+import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.collect.ImmutableList;
+import autovaluegson.factory.shaded.com.google.common.collect.ImmutableSet;
 import hkspoilerviewer.api.ItemPlacement;
+import hkspoilerviewer.api.Location;
 import hkspoilerviewer.api.Logic;
-import hkspoilerviewer.api.Placement;
-import hkspoilerviewer.gui.ListItemStyle;
+import hkspoilerviewer.api.Obtain;
+import hkspoilerviewer.gui.ListItemRender;
 
 @AutoValue
 public abstract class SearchDocument {
 
-  public abstract SearchItemKey key();
+  public abstract SearchContext ctx();
 
-  public abstract Placement placement();
+  public abstract Obtain obtain();
 
-  public abstract ImmutableList<ItemPlacement> itemPlacements();
+  public final Location location() {
+    return obtain().location();
+  }
 
-  public abstract ImmutableList<String> itemNames();
+  public final ImmutableList<ItemPlacement> itemPlacements() {
+    return obtain().itemPlacements();
+  }
 
-  public abstract ImmutableList<String> locationNames();
+  @Memoized
+  public ImmutableSet<String> itemNames() {
+    return itemPlacements().stream().flatMap(ip -> ip.item().aliases().stream())
+        .collect(ImmutableSet.toImmutableSet());
+  }
 
-  public abstract String mapAreaName();
+  public final ImmutableList<String> locationNames() {
+    return location().aliases();
+  }
 
-  public abstract String titleAreaName();
+  public final String mapAreaName() {
+    return location().mapAreaName();
+  }
 
-  public abstract Logic logic();
+  public final String titleAreaName() {
+    return location().titleAreaName();
+  }
 
-  public abstract boolean transition();
+  public final Logic logic() {
+    return ctx().routeLogicMap().logic(obtain().indices());
+  }
 
-  public abstract boolean vanilla();
+  public final boolean transition() {
+    return location().isTransition();
+  }
 
-  public abstract boolean routed();
+  @Memoized
+  public boolean vanilla() {
+    return itemPlacements().stream().allMatch(ip -> ip.data().vanilla());
+  }
 
-  public final ListItemStyle render() {
+  public final boolean routed() {
+    return ctx().rando().logic().isObtained(obtain().indices());
+  }
+
+  public final ListItemRender render() {
     var sb = new StringBuilder();
     if (routed()) {
       sb.append("(R) ");
+    }
+    if (vanilla()) {
+      sb.append("#");
     }
     switch (logic()) {
       case IN_LOGIC:
@@ -51,85 +82,19 @@ public abstract class SearchDocument {
 
     boolean paren = itemPlacements().size() > 1;
     sb.append(paren ? "(" : "");
-    sb.append(
-        itemPlacements().stream().map(i -> i.item().name()).collect(Collectors.joining(", ")));
+    sb.append(itemPlacements().stream().map(i -> i.item().name().name())
+        .collect(Collectors.joining(", ")));
     sb.append(paren ? ")" : "");
     sb.append(" @ ");
-    sb.append(placement().location().name());
+    sb.append(location().name().name());
 
     // TODO: Costs
-    return ListItemStyle.create(sb.toString(), false, false, transition());
+    return ListItemRender.create(sb.toString(), false, false, transition());
   }
 
   // FIXME: Costs
 
-  private static <C extends Comparable<C>> C max(C c1, C c2) {
-    return c1.compareTo(c2) < 0 ? c2 : c1;
-  }
-
-  public static SearchDocument create(SearchContext ctx, SearchItemKey key) {
-    var itemPlacements = key.placementIds().stream().map(ctx::itemPlacement)
-        .collect(ImmutableList.toImmutableList());
-    var placement = ctx.placement(key);
-
-    Builder b = new AutoValue_SearchDocument.Builder();
-    b.setKey(key);
-    b.setPlacement(placement);
-    b.setItemPlacements(itemPlacements);
-    var loc = placement.location();
-    loc.aliases().forEach(b::addLocationName);
-    b.setMapAreaName(loc.mapArea());
-    b.setTitleAreaName(loc.titleArea());
-    b.setTransition(placement.isTransition());
-    b.setRouted(key.placementIds().stream().allMatch(id -> ctx.rando().logic().isObtained(id)));
-
-    boolean vanilla = true;
-    var logic = Logic.IN_LOGIC;
-    var logicMap = ctx.routeLogicMap();
-    for (var i : itemPlacements) {
-      i.item().aliases().forEach(b::addItemName);
-      vanilla &= i.isVanilla();
-      logic = max(logic, logicMap.logic(i.placementId()));
-    }
-
-    b.setVanilla(vanilla);
-    return b.build();
-  }
-
-  @AutoValue.Builder
-  public abstract static class Builder {
-    public abstract Builder setKey(SearchItemKey key);
-
-    public abstract Builder setPlacement(Placement placement);
-
-    public abstract Builder setItemPlacements(ImmutableList<ItemPlacement> itemPlacements);
-
-    public abstract ImmutableList.Builder<String> itemNamesBuilder();
-
-    public final Builder addItemName(String itemName) {
-      itemNamesBuilder().add(itemName);
-      return this;
-    }
-
-    public abstract ImmutableList.Builder<String> locationNamesBuilder();
-
-    public final Builder addLocationName(String locationName) {
-      itemNamesBuilder().add(locationName);
-      return this;
-    }
-
-    public abstract Builder setMapAreaName(String mapAreaName);
-
-    public abstract Builder setTitleAreaName(String titleAreaName);
-
-    public abstract Builder setLogic(Logic logic);
-
-    public abstract Builder setTransition(boolean transition);
-
-    public abstract Builder setVanilla(boolean vanilla);
-
-    public abstract Builder setRouted(boolean routed);
-
-    public abstract SearchDocument build();
+  public static SearchDocument create(SearchContext ctx, Obtain obtain) {
+    return new AutoValue_SearchDocument(ctx, obtain);
   }
 }

@@ -5,11 +5,7 @@ import com.google.common.collect.ImmutableList;
 
 @AutoValue
 public abstract class RandoContextRequest {
-  public static final int DEFAULT_BASE_ID = 0;
-
-  public abstract int baseId();
-
-  public abstract ImmutableList<Integer> placementAcquisitions();
+  public abstract ImmutableList<ObtainIndices> obtains();
 
   // TODO: Edits.
 }

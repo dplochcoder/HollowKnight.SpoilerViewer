@@ -6,12 +6,14 @@ import autovaluegson.factory.shaded.com.google.common.collect.ImmutableList;
 
 @AutoValue
 public abstract class Item {
-  public abstract String name();
+  public abstract ItemName name();
+
+  public abstract ItemIndex index();
 
   @Memoized
   public ImmutableList<String> aliases() {
     // TODO: Add more aliases
-    return ImmutableList.of(name());
+    return ImmutableList.of(name().name());
   }
 
   public abstract boolean isTransition();

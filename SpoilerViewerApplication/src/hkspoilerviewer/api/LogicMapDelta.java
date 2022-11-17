@@ -5,5 +5,5 @@ import com.google.common.collect.ImmutableMap;
 
 @AutoValue
 public abstract class LogicMapDelta {
-  public abstract ImmutableMap<Integer, Logic> deltaByPlacementId();
+  public abstract ImmutableMap<ObtainIndices, Logic> deltaByObtainIndices();
 }
