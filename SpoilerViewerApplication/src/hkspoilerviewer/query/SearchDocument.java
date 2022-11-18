@@ -89,7 +89,7 @@ public abstract class SearchDocument {
     sb.append(location().name().name());
 
     // TODO: Costs
-    return ListItemRender.create(sb.toString(), false, false, transition());
+    return ListItemRender.builder(sb.toString()).setItalics(transition()).build();
   }
 
   // FIXME: Costs

@@ -12,7 +12,23 @@ public abstract class ListItemRender {
 
   public abstract boolean italics();
 
-  public static ListItemRender create(String text, boolean faded, boolean bold, boolean italics) {
-    return new AutoValue_ListItemRender(text, faded, bold, italics);
+  public abstract Builder toBuilder();
+
+  public static Builder builder(String text) {
+    return new AutoValue_ListItemRender.Builder().setText(text).setFaded(false).setBold(false)
+        .setItalics(false);
+  }
+
+  @AutoValue.Builder
+  public abstract static class Builder {
+    public abstract Builder setText(String text);
+
+    public abstract Builder setFaded(boolean faded);
+
+    public abstract Builder setBold(boolean bold);
+
+    public abstract Builder setItalics(boolean italics);
+
+    public abstract ListItemRender build();
   }
 }
