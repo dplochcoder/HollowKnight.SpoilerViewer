@@ -1,28 +1,36 @@
 package hkspoilerviewer.api;
 
 import com.google.auto.value.AutoValue;
+import com.google.auto.value.extension.memoized.Memoized;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 @AutoValue
 public abstract class LogicMapSequence {
-  public abstract LogicMap base();
+  public abstract LogicMap baseMap();
 
-  // Maps each obtain to a set of logic changes, in order.
-  public abstract ImmutableMap<ObtainIndices, LogicMapDelta> deltas();
+  public abstract ImmutableList<LogicMapSequenceEntry> entryList();
+
+  @Memoized
+  public ImmutableMap<ObtainIndices, LogicMapDelta> entryMap() {
+    return entryList().stream().collect(
+        ImmutableMap.toImmutableMap(LogicMapSequenceEntry::key, LogicMapSequenceEntry::value));
+  }
 
   public final boolean isObtained(ObtainIndices obtainIndices) {
-    return deltas().containsKey(obtainIndices);
+    return entryMap().containsKey(obtainIndices);
   }
 
   public final LogicMap getByIndex(int index) {
-    return base().apply(deltas().values().asList().subList(0, index));
+    return baseMap().apply(entryList().subList(0, index).parallelStream()
+        .map(LogicMapSequenceEntry::value).collect(ImmutableList.toImmutableList()));
   }
 
   public final LogicMap getByObtain(ObtainIndices obtainIndices) {
-    return getByIndex(deltas().keySet().asList().indexOf(obtainIndices) + 1);
+    return getByIndex(entryMap().keySet().asList().indexOf(obtainIndices) + 1);
   }
 
   public final int size() {
-    return deltas().size() + 1;
+    return entryList().size() + 1;
   }
 }

@@ -1,6 +1,5 @@
 using Modding;
 using PurenailCore.ModUtil;
-using System.Threading;
 
 namespace SpoilerViewerMod
 {
