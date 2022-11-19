@@ -1,11 +1,8 @@
-﻿using Newtonsoft.Json;
-using RandomizerMod.RC;
+﻿using RandomizerMod.RC;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Net;
-using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
 namespace SpoilerViewerMod.Server
@@ -35,71 +32,51 @@ namespace SpoilerViewerMod.Server
             thread.Start();
         }
 
-        private void RunSync(int port) { 
-            IPHostEntry host = Dns.GetHostEntry("localhost");
-            var ip = host.AddressList[0];
-            IPEndPoint endP = new(ip, port);
-
-            Socket socket = new(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            socket.Bind(endP);
-            socket.Listen(4);
+        private void RunSync(int port) {
+            string url = $"http://localhost:{port}/";
+            HttpListener listener = new();
+            listener.Prefixes.Add(url);
+            listener.Start();
 
             // FIXME: Start JAR
-            var handler = socket.Accept();
             while (true)
             {
-                var methodName = ReceiveString(handler);
-                switch (methodName)
+                var ctx = listener.GetContext();
+                var req = ctx.Request;
+                var resp = ctx.Response;
+                switch (req.Url.AbsolutePath)
                 {
-                    case "getMethodContext":
-                        handleMethod<API.RandoContextRequest, API.RandoContext>(handler, getRandoContext);
+                    case "/getRandoContext":
+                        handleMethod<API.RandoContextRequest, API.RandoContext>(ctx, getRandoContext);
                         break;
                     default:
-                        throw new InvalidOperationException($"Unknown command: {methodName}");
+                        resp.StatusCode = 404;
+                        resp.Close();
+                        break;
                 }
             }
         }
 
-        private string ReceiveString(Socket socket)
-        {
-            int recv = socket.Receive(buffer, 4, SocketFlags.None);
-            if (recv != 4)
-            {
-                throw new InvalidOperationException($"Expected 4 bytes; got {recv}");
-            }
-
-            int size = BitConverter.ToInt32(buffer, 0);
-            if (size <= 0)
-            {
-                throw new InvalidOperationException($"Expected bytes; got {recv}");
-            }
-
-            recv = socket.Receive(buffer, size, SocketFlags.None);
-            if (recv != size)
-            {
-                throw new InvalidOperationException($"Expected {size} bytes; got {recv}");
-            }
-
-            return System.Text.Encoding.UTF8.GetString(buffer, 0, size);
-        }
-
         private delegate Resp RpcMethod<Req, Resp>(Req request);
 
-        private void handleMethod<Req, Resp>(Socket socket, RpcMethod<Req, Resp> method)
+        private void handleMethod<Req, Resp>(HttpListenerContext ctx, RpcMethod<Req, Resp> method)
         {
-            var req = JsonUtil.DeserializeFromString<Req>(ReceiveString(socket));
-
-            // TODO: Error API
-            var resp = method(req);
-
-            MemoryStream stream = new();
-            using StreamWriter sw = new(stream);
-            JsonUtil.Serialize(resp, sw);
-            sw.Flush();
-
-            Array.Copy(BitConverter.GetBytes(stream.Length), buffer, 4);
-            Array.Copy(stream.GetBuffer(),0, buffer, 4, stream.Length);
-            socket.Send(buffer, 0, (int)(stream.Length + 4), SocketFlags.None);
+            try
+            {
+                using StreamReader sr = new(ctx.Request.InputStream);
+                var req = JsonUtil.DeserializeFromString<Req>(sr.ReadToEnd());
+                JsonUtil.Serialize(method(req), new StreamWriter(ctx.Response.OutputStream));
+            }
+            catch (Exception e)
+            {
+                ctx.Response.StatusCode = 500;
+                var bytes = Encoding.UTF8.GetBytes(e.Message);
+                ctx.Response.OutputStream.Write(bytes, 0, bytes.Length);
+            }
+            finally
+            {
+                ctx.Response.Close();
+            }
         }
 
         private API.RandoContext getRandoContext(API.RandoContextRequest request)
