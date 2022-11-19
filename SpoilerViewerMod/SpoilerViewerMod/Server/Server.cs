@@ -5,6 +5,7 @@ using RandomizerMod.RandomizerData;
 using RandomizerMod.RC;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -44,7 +45,14 @@ namespace SpoilerViewerMod.Server
             listener.Prefixes.Add(url);
             listener.Start();
 
-            // FIXME: Start JAR
+            // Launch the JAR and give it the port number.
+            Process process = new();
+            process.StartInfo.FileName = "java";
+            process.StartInfo.Arguments = $"-jar \"{SpoilerViewerMod.JarFile}\" {port}";
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.CreateNoWindow = true;
+            process.Start();
+
             while (true)
             {
                 var ctx = listener.GetContext();
