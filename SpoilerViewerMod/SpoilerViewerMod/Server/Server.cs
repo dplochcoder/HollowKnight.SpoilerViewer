@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using RandomizerMod.RC;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
@@ -13,12 +14,12 @@ namespace SpoilerViewerMod.Server
 
     public class Server
     {
-        private readonly RandoModContext context;
+        private readonly RandoModContext ctx;
         private Thread? thread;
 
-        public Server(RandoModContext context)
+        public Server(RandoModContext ctx)
         {
-            this.context = context;
+            this.ctx = ctx;
         }
 
         private byte[] buffer = new byte[1 << 20];
@@ -30,6 +31,11 @@ namespace SpoilerViewerMod.Server
                 throw new ArgumentException("Cannot start multiple servers");
             }
 
+            thread = new(() => RunSync(port));
+            thread.Start();
+        }
+
+        private void RunSync(int port) { 
             IPHostEntry host = Dns.GetHostEntry("localhost");
             var ip = host.AddressList[0];
             IPEndPoint endP = new(ip, port);
@@ -98,6 +104,19 @@ namespace SpoilerViewerMod.Server
 
         private API.RandoContext getRandoContext(API.RandoContextRequest request)
         {
+            IndexedList<API.ItemName, API.Item> items = new(i => i.name);
+            IndexedList<API.LocationName, API.Location> locations = new(l => l.name);
+
+            foreach (var p in ctx.itemPlacements)
+            {
+
+            }
+            foreach (var p in ctx.transitionPlacements)
+            {
+
+            }
+
+            // TODO: obtains and logic
             API.RandoContext rc = new();
 
             return rc;

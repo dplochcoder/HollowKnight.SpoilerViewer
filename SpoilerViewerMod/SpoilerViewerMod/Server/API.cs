@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace SpoilerViewerMod.Server.API
 {
@@ -62,6 +63,9 @@ namespace SpoilerViewerMod.Server.API
         public string mapAreaName;
         public string titleAreaName;
         public List<ItemPlacementData> itemPlacementDatum = new();
+
+        [JsonIgnore]
+        public string Name => name.name;
     }
 
     public record ItemPlacementIndex
