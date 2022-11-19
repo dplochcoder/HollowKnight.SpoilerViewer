@@ -17,17 +17,10 @@ public abstract class RandoContext {
     return Maps.uniqueIndex(items(), Item::name);
   }
 
-  public final Item item(ItemIndex itemIndex) {
-    return items().get(itemIndex.index());
-  }
-
   public final Item item(ItemName itemName) {
     return itemsByName().get(itemName);
   }
 
-  public final ItemIndex itemIndex(Item item) {
-    return ItemIndex.of(itemsByName().keySet().asList().indexOf(item.name()));
-  }
 
   public abstract ImmutableList<Location> locations();
 
@@ -36,16 +29,8 @@ public abstract class RandoContext {
     return Maps.uniqueIndex(locations(), Location::name);
   }
 
-  public final Location location(LocationIndex locationIndex) {
-    return locations().get(locationIndex.index());
-  }
-
   public final Location location(LocationName locationName) {
     return locationsByName().get(locationName);
-  }
-
-  public final LocationIndex locationIndex(Location location) {
-    return LocationIndex.of(locationsByName().keySet().asList().indexOf(location.name()));
   }
 
   @Memoized

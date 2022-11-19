@@ -8,8 +8,6 @@ import autovaluegson.factory.shaded.com.google.common.collect.ImmutableList;
 public abstract class Item {
   public abstract ItemName name();
 
-  public abstract ItemIndex index();
-
   @Memoized
   public ImmutableList<String> aliases() {
     // TODO: Add more aliases

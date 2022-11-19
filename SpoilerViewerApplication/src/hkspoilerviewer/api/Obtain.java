@@ -12,7 +12,7 @@ public abstract class Obtain {
   public abstract ImmutableList<ItemPlacement> itemPlacements();
 
   public static Obtain create(RandoContext ctx, ObtainIndices obtainIndices) {
-    Location location = ctx.location(obtainIndices.locationIndex());
+    Location location = ctx.location(obtainIndices.locationName());
     return new AutoValue_Obtain(obtainIndices, location,
         obtainIndices.itemPlacementIndices().stream()
             .map(ipi -> ItemPlacement.create(ctx, location, ipi, location.itemPlacementData(ipi)))

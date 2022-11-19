@@ -1,8 +1,10 @@
 ﻿using RandomizerMod.RC;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
 
@@ -89,9 +91,13 @@ namespace SpoilerViewerMod.Server
 
         private API.RandoContext getRandoContext(API.RandoContextRequest request)
         {
-            IndexedList<API.ItemName, API.Item> items = new(i => i.name);
-            IndexedList<API.LocationName, API.Location> locations = new(l => l.name);
+            Dictionary<API.ItemName, API.Item> items = new();
+            Dictionary<API.LocationName, API.Location> locations = new();
 
+            foreach (var gp in ctx.Vanilla)
+            {
+
+            }
             foreach (var p in ctx.itemPlacements)
             {
 

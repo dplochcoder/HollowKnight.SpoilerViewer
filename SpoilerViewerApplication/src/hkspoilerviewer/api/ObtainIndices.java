@@ -5,12 +5,12 @@ import com.google.common.collect.ImmutableSet;
 
 @AutoValue
 public abstract class ObtainIndices {
-  public abstract LocationIndex locationIndex();
+  public abstract LocationName locationName();
 
   public abstract ImmutableSet<ItemPlacementIndex> itemPlacementIndices();
 
-  public static ObtainIndices create(LocationIndex locationIndex,
+  public static ObtainIndices create(LocationName locationName,
       Iterable<ItemPlacementIndex> itemPlacementIndices) {
-    return new AutoValue_ObtainIndices(locationIndex, ImmutableSet.copyOf(itemPlacementIndices));
+    return new AutoValue_ObtainIndices(locationName, ImmutableSet.copyOf(itemPlacementIndices));
   }
 }

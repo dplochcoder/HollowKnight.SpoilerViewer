@@ -14,6 +14,6 @@ public abstract class ItemPlacement {
 
   public static ItemPlacement create(RandoContext ctx, Location location, ItemPlacementIndex index,
       ItemPlacementData data) {
-    return new AutoValue_ItemPlacement(location, index, data, ctx.item(data.itemIndex()));
+    return new AutoValue_ItemPlacement(location, index, data, ctx.item(data.itemName()));
   }
 }

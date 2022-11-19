@@ -4,7 +4,7 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class ItemPlacementData {
-  public abstract ItemIndex itemIndex();
+  public abstract ItemName itemName();
 
   public abstract boolean vanilla();
 

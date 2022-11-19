@@ -17,8 +17,6 @@ public abstract class Location {
     return ImmutableList.of(name().name());
   }
 
-  public abstract LocationIndex index();
-
   public abstract boolean isShop();
 
   public abstract boolean isTransition();
@@ -36,9 +34,9 @@ public abstract class Location {
   public final Stream<ObtainIndices> obtainIndices() {
     if (isShop()) {
       return IntStream.range(0, itemPlacementDatum().size())
-          .mapToObj(i -> ObtainIndices.create(index(), ImmutableSet.of(ItemPlacementIndex.of(i))));
+          .mapToObj(i -> ObtainIndices.create(name(), ImmutableSet.of(ItemPlacementIndex.of(i))));
     } else {
-      return Stream.of(ObtainIndices.create(index(), IntStream.range(0, itemPlacementDatum().size())
+      return Stream.of(ObtainIndices.create(name(), IntStream.range(0, itemPlacementDatum().size())
           .mapToObj(ItemPlacementIndex::of).collect(ImmutableSet.toImmutableSet())));
     }
   }

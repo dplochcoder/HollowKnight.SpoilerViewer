@@ -5,80 +5,65 @@ namespace SpoilerViewerMod.Server.API
 {
     public record ItemName
     {
-        public string name;
+        public readonly string name;
 
         public ItemName(string name) { this.name = name; }
     }
 
-    public record ItemIndex
-    {
-        public int index;
-
-        public ItemIndex(int index) { this.index = index; }
-    }
-
     public record Item
     {
-        public ItemName name;
-        public ItemIndex index;
+        public readonly ItemName name;
+        public bool isTransition;
 
-        public Item(ItemName name, ItemIndex index)
-        {
-            this.name = name;
-            this.index = index;
-        }
+        public Item(ItemName name) { this.name = name; }
     }
     public record LocationName
     {
-        public string name;
+        public readonly string name;
 
         public LocationName(string name) { this.name = name; }
     }
 
-    public record LocationIndex
-    {
-        public int index;
-
-        public LocationIndex(int index) { this.index = index; }
-    }
-
     public record ItemPlacementData
     {
-        public ItemIndex itemIndex;
+        public readonly ItemName itemName;
         public bool vanilla;
 
-        public ItemPlacementData(ItemIndex itemIndex, bool vanilla)
-        {
-            this.itemIndex = itemIndex;
-            this.vanilla = vanilla;
-        }
+        public ItemPlacementData(ItemName itemName) { this.itemName = itemName; }
     }
 
     public record Location
     {
-        public LocationName name;
-        public LocationIndex index;
+        public readonly LocationName name;
         public bool isShop;
         public bool isTransition;
-        public string mapAreaName;
-        public string titleAreaName;
+        public string mapAreaName = "Unknown";
+        public string titleAreaName = "Unknown";
         public List<ItemPlacementData> itemPlacementDatum = new();
 
         [JsonIgnore]
         public string Name => name.name;
+
+        public Location(LocationName name) { this.name = name; }
     }
 
     public record ItemPlacementIndex
     {
-        public int index;
+        public readonly int index;
 
         public ItemPlacementIndex(int index) { this.index = index; }
     }
 
     public record ObtainIndices
     {
-        public LocationIndex locationIndex;
-        public List<ItemPlacementIndex> itemPlacementIndices = new();
+        public readonly LocationName locationName;
+        public readonly List<ItemPlacementIndex> itemPlacementIndices = new();
+
+        public ObtainIndices(LocationName locationName, List<ItemPlacementIndex> itemPlacementIndices)
+        {
+            this.locationName = locationName;
+            this.itemPlacementIndices = itemPlacementIndices;
+        }
     }
 
     public enum Logic
