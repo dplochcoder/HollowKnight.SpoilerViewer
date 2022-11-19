@@ -1,3 +1,4 @@
+ItemChanger
 Randomizer 4
 RandomizerCore
 PurenailCore

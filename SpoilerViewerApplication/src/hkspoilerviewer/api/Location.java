@@ -1,5 +1,6 @@
 package hkspoilerviewer.api;
 
+import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import com.google.auto.value.AutoValue;
@@ -21,9 +22,9 @@ public abstract class Location {
 
   public abstract boolean isTransition();
 
-  public abstract String mapAreaName();
+  public abstract Optional<String> mapAreaName();
 
-  public abstract String titleAreaName();
+  public abstract Optional<String> titleAreaName();
 
   public abstract ImmutableList<ItemPlacementData> itemPlacementDatum();
 

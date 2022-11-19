@@ -37,11 +37,11 @@ public abstract class SearchDocument {
   }
 
   public final String mapAreaName() {
-    return location().mapAreaName();
+    return location().mapAreaName().orElse("Unknown");
   }
 
   public final String titleAreaName() {
-    return location().titleAreaName();
+    return location().titleAreaName().orElse("Unknown");
   }
 
   public final Logic logic() {

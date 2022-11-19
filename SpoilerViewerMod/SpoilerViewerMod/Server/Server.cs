@@ -1,10 +1,13 @@
-﻿using RandomizerMod.RC;
+﻿using ItemChanger;
+using PurenailCore.SystemUtil;
+using RandomizerCore.Logic;
+using RandomizerMod.RandomizerData;
+using RandomizerMod.RC;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
 
@@ -89,6 +92,26 @@ namespace SpoilerViewerMod.Server
             }
         }
 
+        private API.Location GetLocation(IDictionary<API.LocationName, API.Location> locations, string name)
+        {
+            API.LocationName locName = new(name);
+            if (locations.TryGetValue(locName, out var loc)) return loc;
+
+            loc = new(locName);
+            locations[locName] = loc;
+            return loc;
+        }
+
+        private API.Item GetItem(IDictionary<API.ItemName, API.Item> items, string name)
+        {
+            API.ItemName itemName = new(name);
+            if (items.TryGetValue(itemName, out var item)) return item;
+
+            item = new(itemName);
+            items[itemName] = item;
+            return item;
+        }
+
         private API.RandoContext getRandoContext(API.RandoContextRequest request)
         {
             Dictionary<API.ItemName, API.Item> items = new();
@@ -96,20 +119,53 @@ namespace SpoilerViewerMod.Server
 
             foreach (var gp in ctx.Vanilla)
             {
+                bool isTransition = gp.Location is LogicTransition;
 
+                var apiLoc = GetLocation(locations, gp.Location.Name);
+                apiLoc.isTransition = isTransition;
+                var fLoc = Finder.GetLocation(gp.Location.Name);
+                if (fLoc?.sceneName != null) {
+                    apiLoc.mapAreaName ??= Data.GetRoomDef(fLoc.sceneName)?.MapArea;
+                    apiLoc.titleAreaName ??= Data.GetRoomDef(fLoc.sceneName)?.TitledArea;
+                }
+
+                var apiItem = GetItem(items, gp.Item.Name);
+                apiItem.isTransition = isTransition;
+                API.ItemPlacementData ipd = new(apiItem.name);
+                // TODO: Costs
+                apiLoc.itemPlacementDatum.Add(ipd);
             }
+
             foreach (var p in ctx.itemPlacements)
             {
+                var apiLoc = GetLocation(locations, p.Location.Name);
+                apiLoc.mapAreaName ??= p.Location.LocationDef?.MapArea;
+                apiLoc.titleAreaName ??= p.Location.LocationDef?.TitledArea;
 
+                var apiItem = GetItem(items, p.Item.Name);
+                API.ItemPlacementData ipd = new(apiItem.name);
+                // TODO: Costs
+                apiLoc.itemPlacementDatum.Add(ipd);
             }
+
             foreach (var p in ctx.transitionPlacements)
             {
+                var apiLoc = GetLocation(locations, p.Source.Name);
+                apiLoc.isTransition = true;
+                apiLoc.mapAreaName ??= p.Source.TransitionDef?.MapArea;
+                apiLoc.titleAreaName ??= p.Source.TransitionDef?.TitledArea;
 
+                var apiItem = GetItem(items, p.Target.Name);
+                apiItem.isTransition = true;
+                API.ItemPlacementData ipd = new(apiItem.name);
+                apiLoc.itemPlacementDatum.Add(ipd);
             }
 
-            // TODO: obtains and logic
             API.RandoContext rc = new();
+            items.Values.ForEach(i => rc.items.Add(i));
+            locations.Values.ForEach(l => rc.locations.Add(l));
 
+            // TODO: obtains and logic
             return rc;
         }
     }

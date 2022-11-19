@@ -37,8 +37,8 @@ namespace SpoilerViewerMod.Server.API
         public readonly LocationName name;
         public bool isShop;
         public bool isTransition;
-        public string mapAreaName = "Unknown";
-        public string titleAreaName = "Unknown";
+        public string? mapAreaName;
+        public string? titleAreaName;
         public List<ItemPlacementData> itemPlacementDatum = new();
 
         [JsonIgnore]
