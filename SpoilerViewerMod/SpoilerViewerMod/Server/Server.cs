@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 
@@ -44,6 +45,13 @@ namespace SpoilerViewerMod.Server
                 var ctx = listener.GetContext();
                 var req = ctx.Request;
                 var resp = ctx.Response;
+                if (req.HttpMethod != HttpMethod.Post.Method)
+                {
+                    resp.StatusCode = 500;
+                    resp.Close();
+                    continue;
+                }
+
                 switch (req.Url.AbsolutePath)
                 {
                     case "/getRandoContext":
