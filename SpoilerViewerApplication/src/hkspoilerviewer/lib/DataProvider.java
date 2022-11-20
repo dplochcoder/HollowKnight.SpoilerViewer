@@ -1,8 +1,6 @@
 package hkspoilerviewer.lib;
 
-import java.util.function.Consumer;
-
-public final class DataProvider<T> extends ListenerManager<Consumer<T>> {
+public final class DataProvider<T> extends ListenerManager<UpdateReceiver<T>> {
   private T data;
 
   public DataProvider(T data) {
@@ -13,10 +11,10 @@ public final class DataProvider<T> extends ListenerManager<Consumer<T>> {
     return data;
   }
 
-  public void update(T data) {
+  public void update(UpdateSession session, T data) {
     synchronized (this) {
       this.data = data;
-      forEach(l -> l.accept(data));
+      forEach(l -> l.receive(session, data));
     }
   }
 }
