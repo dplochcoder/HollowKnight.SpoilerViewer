@@ -2,9 +2,7 @@ package hkspoilerviewer.query;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.google.common.collect.ImmutableSet;
 import hkspoilerviewer.api.LogicMap;
-import hkspoilerviewer.api.ObtainIndices;
 import hkspoilerviewer.api.RandoContext;
 
 @AutoValue
@@ -12,17 +10,13 @@ public abstract class SearchContext {
 
   public abstract RandoContext rando();
 
-  public abstract ImmutableSet<ObtainIndices> bookmarks();
+  public abstract Bookmarks bookmarks();
 
-  public abstract ImmutableSet<ObtainIndices> hidden();
-
-  public abstract ImmutableSet<ObtainIndices> route();
-
-  public abstract int routePlacementIndex();
+  public abstract RouteInfo routeInfo();
 
   @Memoized
   public LogicMap routeLogicMap() {
-    return rando().logic().getByIndex(routePlacementIndex());
+    return rando().logic().getByIndex(routeInfo().routeIndex());
   }
 
   public abstract Builder toBuilder();
@@ -35,13 +29,9 @@ public abstract class SearchContext {
   public abstract static class Builder {
     public abstract Builder setRando(RandoContext rando);
 
-    public abstract Builder setBookmarks(ImmutableSet<ObtainIndices> bookmarks);
+    public abstract Builder setBookmarks(Bookmarks bookmarks);
 
-    public abstract Builder setHidden(ImmutableSet<ObtainIndices> hidden);
-
-    public abstract Builder setRoute(ImmutableSet<ObtainIndices> route);
-
-    public abstract Builder setRoutePlacementIndex(int routePlacementIndex);
+    public abstract Builder setRouteInfo(RouteInfo routeInfo);
 
     public abstract SearchContext build();
   }

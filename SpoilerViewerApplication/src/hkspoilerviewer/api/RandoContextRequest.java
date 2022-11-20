@@ -7,5 +7,5 @@ import com.google.common.collect.ImmutableList;
 public abstract class RandoContextRequest {
   public abstract ImmutableList<ObtainIndices> obtains();
 
-  // TODO: Edits.
+  // TODO: Edits, files.
 }
