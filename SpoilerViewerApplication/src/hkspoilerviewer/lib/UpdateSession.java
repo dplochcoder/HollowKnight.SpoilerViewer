@@ -24,7 +24,7 @@ public final class UpdateSession implements AutoCloseable {
   }
 
   @Override
-  public void close() throws Exception {
+  public void close() {
     while (!subscribers.isEmpty()) {
       List<UpdateSubscriber> clone = new ArrayList<>(subscribers);
       subscribers.clear();
