@@ -43,5 +43,33 @@ public abstract class RandoContext {
     return obtainsByIndices().keySet();
   }
 
+  public final ImmutableList<Obtain> obtains() {
+    return obtainsByIndices().values().asList();
+  }
+
   public abstract LogicMapSequence logic();
+
+  private static final RandoContext EMPTY = builder().build();
+
+  public static RandoContext empty() {
+    return EMPTY;
+  }
+
+  public abstract Builder toBuilder();
+
+  public static Builder builder() {
+    return new AutoValue_RandoContext.Builder().setItems(ImmutableList.of())
+        .setLocations(ImmutableList.of()).setLogic(LogicMapSequence.empty());
+  }
+
+  @AutoValue.Builder
+  public abstract static class Builder {
+    public abstract Builder setItems(ImmutableList<Item> items);
+
+    public abstract Builder setLocations(ImmutableList<Location> locations);
+
+    public abstract Builder setLogic(LogicMapSequence logic);
+
+    public abstract RandoContext build();
+  }
 }

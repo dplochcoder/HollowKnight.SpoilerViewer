@@ -58,7 +58,7 @@ public abstract class SearchDocument {
   }
 
   public final boolean routed() {
-    return ctx().rando().logic().isObtained(obtain().indices());
+    return ctx().routeInfo().isObtained(obtain().indices());
   }
 
   public final ListItemRender render() {
@@ -77,6 +77,9 @@ public abstract class SearchDocument {
         break;
       case OUT_OF_LOGIC:
         sb.append("*");
+        break;
+      case UNKNOWN:
+        sb.append("(?) ");
         break;
     }
 

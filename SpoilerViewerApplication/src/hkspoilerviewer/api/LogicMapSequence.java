@@ -33,4 +33,15 @@ public abstract class LogicMapSequence {
   public final int size() {
     return entryList().size() + 1;
   }
+
+  public static LogicMapSequence create(LogicMap baseMap,
+      ImmutableList<LogicMapSequenceEntry> entryList) {
+    return new AutoValue_LogicMapSequence(baseMap, entryList);
+  }
+
+  private static LogicMapSequence EMPTY = create(LogicMap.empty(), ImmutableList.of());
+
+  public static LogicMapSequence empty() {
+    return EMPTY;
+  }
 }

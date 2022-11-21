@@ -32,4 +32,10 @@ public abstract class LogicMap {
     return new AutoValue_LogicMap(logicByObtainIndices.entrySet().stream()
         .map(LogicMapEntry::create).collect(ImmutableList.toImmutableList()));
   }
+
+  private static final LogicMap EMPTY = create(ImmutableMap.of());
+
+  public static LogicMap empty() {
+    return EMPTY;
+  }
 }
