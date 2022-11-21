@@ -22,35 +22,33 @@ public final class SearchResultsListModel implements UpdateSubscriber, ListModel
   private final DataProvider<RandoContext> randoContext;
   private final DataProvider<Bookmarks> bookmarks;
   private final DataProvider<RouteInfo> routeInfo;
-  private final DataProvider<SearchDocumentFilter> searchFilter;
-  private final DataProvider<SearchDocumentSorter> searchSorter;
+  private final SearchDocumentFilter searchDocumentFilter;
+  private final SearchDocumentSorter searchDocumentSorter;
 
   private final ListenerManager<ListDataListener> listeners = new ListenerManager<>();
 
   public SearchResultsListModel(DataProvider<RandoContext> randoContext,
       DataProvider<Bookmarks> bookmarks, DataProvider<RouteInfo> routeInfo,
-      DataProvider<SearchDocumentFilter> searchFilter,
-      DataProvider<SearchDocumentSorter> searchSorter) {
+      SearchDocumentFilter searchDocumentFilter, SearchDocumentSorter searchDocumentSorter) {
     this.randoContext = randoContext;
     this.bookmarks = bookmarks;
     this.routeInfo = routeInfo;
-    this.searchFilter = searchFilter;
-    this.searchSorter = searchSorter;
+    this.searchDocumentFilter = searchDocumentFilter;
+    this.searchDocumentSorter = searchDocumentSorter;
 
     randoContext.addListener((s, d) -> s.addSubscriber(this));
     bookmarks.addListener((s, d) -> s.addSubscriber(this));
     routeInfo.addListener((s, d) -> s.addSubscriber(this));
-    searchFilter.addListener((s, d) -> s.addSubscriber(this));
-    searchSorter.addListener((s, d) -> s.addSubscriber(this));
+    searchDocumentFilter.addSubscriber(this);
+    searchDocumentSorter.addSubscriber(this);
   }
 
   private final List<SearchResultsListModelItem> items = new ArrayList<>();
 
   private ImmutableList<SearchDocument> docs(SearchContext ctx) {
-    var filter = searchFilter.get();
-    var sorter = searchSorter.get();
     return ctx.rando().obtains().stream().map(obtain -> SearchDocument.create(ctx, obtain))
-        .filter(d -> filter.accept(d)).sorted(sorter).collect(ImmutableList.toImmutableList());
+        .filter(searchDocumentFilter).sorted(searchDocumentSorter)
+        .collect(ImmutableList.toImmutableList());
   }
 
   @Override

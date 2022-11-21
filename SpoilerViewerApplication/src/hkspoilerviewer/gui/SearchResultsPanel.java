@@ -15,10 +15,9 @@ public final class SearchResultsPanel extends JList<String> {
 
   public SearchResultsPanel(DataProvider<RandoContext> randoContext,
       DataProvider<Bookmarks> bookmarks, DataProvider<RouteInfo> routeInfo,
-      DataProvider<SearchDocumentFilter> searchFilter,
-      DataProvider<SearchDocumentSorter> searchSorter) {
-    this.model =
-        new SearchResultsListModel(randoContext, bookmarks, routeInfo, searchFilter, searchSorter);
+      SearchDocumentFilter searchDocumentFilter, SearchDocumentSorter searchDocumentSorter) {
+    this.model = new SearchResultsListModel(randoContext, bookmarks, routeInfo,
+        searchDocumentFilter, searchDocumentSorter);
 
     this.setModel(this.model);
   }

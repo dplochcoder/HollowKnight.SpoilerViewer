@@ -15,8 +15,8 @@ public final class Application extends JFrame {
   private final DataProvider<RandoContext> randoContext;
   private final DataProvider<Bookmarks> bookmarks;
   private final DataProvider<RouteInfo> routeInfo;
-  private final DataProvider<SearchDocumentFilter> searchFilter;
-  private final DataProvider<SearchDocumentSorter> searchSorter;
+  private final SearchDocumentFilter searchDocumentFilter;
+  private final SearchDocumentSorter searchDocumentSorter;
 
   private final SearchResultsPanel searchResultsPanel;
 
@@ -26,8 +26,17 @@ public final class Application extends JFrame {
     this.randoContext = new DataProvider<>(RandoContext.empty());
     this.bookmarks = new DataProvider<>(Bookmarks.empty());
     this.routeInfo = new DataProvider<>(RouteInfo.empty());
+    this.searchDocumentFilter = new SearchDocumentFilter();
+    this.searchDocumentSorter = new SearchDocumentSorter();
+
+    this.searchResultsPanel = new SearchResultsPanel(randoContext, bookmarks, routeInfo,
+        searchDocumentFilter, searchDocumentSorter);
 
     var cPane = getContentPane();
     cPane.setLayout(new BorderLayout());
+    cPane.add(this.searchResultsPanel, BorderLayout.CENTER);
+
+    pack();
+    setVisible(true);
   }
 }
