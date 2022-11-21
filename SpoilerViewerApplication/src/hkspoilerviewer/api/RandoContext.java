@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
 
 @AutoValue
 public abstract class RandoContext {
@@ -20,7 +22,6 @@ public abstract class RandoContext {
   public final Item item(ItemName itemName) {
     return itemsByName().get(itemName);
   }
-
 
   public abstract ImmutableList<Location> locations();
 
@@ -71,5 +72,9 @@ public abstract class RandoContext {
     public abstract Builder setLogic(LogicMapSequence logic);
 
     public abstract RandoContext build();
+  }
+
+  public static TypeAdapter<RandoContext> typeAdapter(Gson gson) {
+    return new AutoValue_RandoContext.GsonTypeAdapter(gson);
   }
 }

@@ -7,6 +7,8 @@ import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
 
 @AutoValue
 public abstract class Location {
@@ -43,4 +45,8 @@ public abstract class Location {
   }
 
   // TODO: Scene data, costs
+
+  public static TypeAdapter<Location> typeAdapter(Gson gson) {
+    return new AutoValue_Location.GsonTypeAdapter(gson);
+  }
 }

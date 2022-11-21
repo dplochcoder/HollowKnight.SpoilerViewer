@@ -4,6 +4,8 @@ import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
 
 @AutoValue
 public abstract class LogicMapSequence {
@@ -43,5 +45,9 @@ public abstract class LogicMapSequence {
 
   public static LogicMapSequence empty() {
     return EMPTY;
+  }
+
+  public static TypeAdapter<LogicMapSequence> typeAdapter(Gson gson) {
+    return new AutoValue_LogicMapSequence.GsonTypeAdapter(gson);
   }
 }
