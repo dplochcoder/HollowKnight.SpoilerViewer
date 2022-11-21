@@ -48,7 +48,7 @@ public final class Log {
     };
   }
 
-  public static synchronized void logException(Exception e) {
+  public static synchronized void log(Exception e) {
     try (OutputStream os = newOutputStream(); PrintStream ps = new PrintStream(os)) {
       e.printStackTrace(ps);
     } catch (IOException ignore) {

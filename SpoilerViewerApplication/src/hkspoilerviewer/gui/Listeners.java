@@ -10,8 +10,12 @@ public final class Listeners {
   public static ActionListener newActionListener(Consumer<ActionEvent> action) {
     return new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent e) {
-        action.accept(e);
+      public void actionPerformed(ActionEvent event) {
+        try {
+          action.accept(event);
+        } catch (Exception e) {
+          Log.log(e);
+        }
       }
     };
   }

@@ -74,9 +74,7 @@ public final class RandoContextUpdater implements Runnable {
 
       @Override
       public void error(Exception e) {
-        // TODO: Error notification
-        System.err.println("Error in RandoContextUpdater: " + e.getMessage());
-        e.printStackTrace();
+        Log.log(e);
       }
     };
   }
