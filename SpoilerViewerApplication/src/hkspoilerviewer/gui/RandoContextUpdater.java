@@ -34,6 +34,7 @@ public final class RandoContextUpdater implements Runnable {
           try {
             wait();
           } catch (InterruptedException e) {
+            Log.log(e);
             return;
           }
         }
@@ -43,6 +44,7 @@ public final class RandoContextUpdater implements Runnable {
 
       RandoContextRequest request =
           RandoContextRequest.builder().setRouteIntent(routeIntent.get()).build();
+      Log.log("Sending request: " + request);
       awaitingResponse = true;
       randoService.getRandoContext(request, newCallback());
 
@@ -51,6 +53,7 @@ public final class RandoContextUpdater implements Runnable {
           try {
             wait();
           } catch (InterruptedException e) {
+            Log.log(e);
             return;
           }
         }
@@ -73,8 +76,9 @@ public final class RandoContextUpdater implements Runnable {
       }
 
       @Override
-      public void error(Exception e) {
-        Log.log(e);
+      public void error(Throwable t) {
+        Log.log("RandoContextUpdater error");
+        Log.log(t);
       }
     };
   }

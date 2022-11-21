@@ -4,7 +4,7 @@ public interface RandoServiceInterface {
   interface Callback<T> {
     void success(T response);
 
-    void error(Exception e);
+    void error(Throwable t);
   }
 
   void getRandoContext(RandoContextRequest request, Callback<RandoContext> cb);

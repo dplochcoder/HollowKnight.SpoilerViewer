@@ -1,6 +1,8 @@
 package hkspoilerviewer.gui;
 
 import javax.swing.JList;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import hkspoilerviewer.api.RandoContext;
 import hkspoilerviewer.lib.DataProvider;
 import hkspoilerviewer.query.Bookmarks;
@@ -18,6 +20,22 @@ public final class SearchResultsPanel extends JList<String> {
       SearchDocumentFilter searchDocumentFilter, SearchDocumentSorter searchDocumentSorter) {
     this.model = new SearchResultsListModel(randoContext, bookmarks, routeInfo,
         searchDocumentFilter, searchDocumentSorter);
+    this.model.addListDataListener(new ListDataListener() {
+      @Override
+      public void intervalRemoved(ListDataEvent e) {
+        SearchResultsPanel.this.repaint();
+      }
+
+      @Override
+      public void intervalAdded(ListDataEvent e) {
+        SearchResultsPanel.this.repaint();
+      }
+
+      @Override
+      public void contentsChanged(ListDataEvent e) {
+        SearchResultsPanel.this.repaint();
+      }
+    });
 
     this.setModel(this.model);
   }

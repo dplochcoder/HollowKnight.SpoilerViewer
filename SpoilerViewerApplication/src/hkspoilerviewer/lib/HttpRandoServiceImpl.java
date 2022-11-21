@@ -25,10 +25,13 @@ public final class HttpRandoServiceImpl implements RandoServiceInterface {
   public HttpRandoServiceImpl(int port) {
     this.port = port;
     this.client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1)
-        .connectTimeout(Duration.ofSeconds(60)).build();
+        .connectTimeout(Duration.ofSeconds(5)).build();
   }
 
   private <T> void invokeCallback(HttpResponse<String> resp, Class<T> clazz, Callback<T> cb) {
+    if (resp == null) {
+      return;
+    }
     if (resp.statusCode() != 200) {
       cb.error(new Exception(
           String.format("Status code: %d; Error: %s", resp.statusCode(), resp.body())));
@@ -60,6 +63,10 @@ public final class HttpRandoServiceImpl implements RandoServiceInterface {
     CompletableFuture<HttpResponse<String>> future =
         client.sendAsync(httpRequest, BodyHandlers.ofString(StandardCharsets.UTF_8));
     future.thenAccept(resp -> invokeCallback(resp, clazz, cb));
+    future.exceptionally(t -> {
+      cb.error(t);
+      return null;
+    });
   }
 
   @Override
