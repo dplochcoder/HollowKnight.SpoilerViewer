@@ -114,8 +114,13 @@ namespace SpoilerViewerMod.Server.API
         public LogicMapSequence logic = new();
     }
 
-    public record RandoContextRequest
+    public record RouteIntent
     {
         public List<ObtainIndices> obtains = new();
+    }
+
+    public record RandoContextRequest
+    {
+        public RouteIntent routeIntent;
     }
 }
