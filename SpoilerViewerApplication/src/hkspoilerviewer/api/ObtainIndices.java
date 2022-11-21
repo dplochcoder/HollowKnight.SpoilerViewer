@@ -19,4 +19,8 @@ public abstract class ObtainIndices {
   public static TypeAdapter<ObtainIndices> typeAdapter(Gson gson) {
     return new AutoValue_ObtainIndices.GsonTypeAdapter(gson);
   }
+
+  static {
+    TypeAdapterRegistry.register(ObtainIndices.class, ObtainIndices::typeAdapter);
+  }
 }

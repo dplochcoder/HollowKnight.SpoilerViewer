@@ -22,4 +22,8 @@ public abstract class RouteIntent {
   public static TypeAdapter<RouteIntent> typeAdapter(Gson gson) {
     return new AutoValue_RouteIntent.GsonTypeAdapter(gson);
   }
+
+  static {
+    TypeAdapterRegistry.register(RouteIntent.class, RouteIntent::typeAdapter);
+  }
 }

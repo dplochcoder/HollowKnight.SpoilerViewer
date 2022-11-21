@@ -26,4 +26,8 @@ public abstract class RandoContextRequest {
   public static TypeAdapter<RandoContextRequest> typeAdapter(Gson gson) {
     return new AutoValue_RandoContextRequest.GsonTypeAdapter(gson);
   }
+
+  static {
+    TypeAdapterRegistry.register(RandoContextRequest.class, RandoContextRequest::typeAdapter);
+  }
 }

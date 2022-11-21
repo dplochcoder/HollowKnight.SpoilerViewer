@@ -19,4 +19,8 @@ public abstract class LocationName {
   public static TypeAdapter<LocationName> typeAdapter(Gson gson) {
     return new AutoValue_LocationName.GsonTypeAdapter(gson);
   }
+
+  static {
+    TypeAdapterRegistry.register(LocationName.class, LocationName::typeAdapter);
+  }
 }

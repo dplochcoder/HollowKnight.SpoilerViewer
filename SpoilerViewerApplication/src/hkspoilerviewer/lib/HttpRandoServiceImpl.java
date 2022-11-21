@@ -9,15 +9,12 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import hkspoilerviewer.api.GsonInstance;
 import hkspoilerviewer.api.RandoContext;
 import hkspoilerviewer.api.RandoContextRequest;
 import hkspoilerviewer.api.RandoServiceInterface;
 
 public final class HttpRandoServiceImpl implements RandoServiceInterface {
-
-  private final Gson gson = new GsonBuilder().create();
 
   private final int port;
   private final HttpClient client;
@@ -40,7 +37,7 @@ public final class HttpRandoServiceImpl implements RandoServiceInterface {
 
     T obj;
     try {
-      obj = gson.fromJson(resp.body(), clazz);
+      obj = GsonInstance.gson().fromJson(resp.body(), clazz);
     } catch (Exception e) {
       cb.error(e);
       return;
@@ -52,7 +49,7 @@ public final class HttpRandoServiceImpl implements RandoServiceInterface {
   private <A, B> void doRequestAsync(String methodName, A request, Class<B> clazz, Callback<B> cb) {
     String body;
     try {
-      body = gson.toJson(request);
+      body = GsonInstance.gson().toJson(request);
     } catch (Exception e) {
       cb.error(e);
       return;
