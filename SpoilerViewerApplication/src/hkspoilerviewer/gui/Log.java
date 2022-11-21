@@ -51,6 +51,7 @@ public final class Log {
   public static synchronized void log(Throwable t) {
     try (OutputStream os = newOutputStream(); PrintStream ps = new PrintStream(os)) {
       t.printStackTrace(ps);
+      ps.flush();
     } catch (IOException ignore) {
     }
   }

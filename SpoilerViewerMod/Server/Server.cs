@@ -35,7 +35,17 @@ namespace SpoilerViewerMod.Server
                 throw new ArgumentException("Cannot start multiple servers");
             }
 
-            thread = new(() => RunSync(port));
+            thread = new(() =>
+            {
+                try
+                {
+                    RunSync(port);
+                }
+                catch (Exception e)
+                {
+                    SpoilerViewerMod.LogError($"Server error: {e}");
+                }
+            });
             thread.Start();
         }
         
