@@ -4,7 +4,10 @@ import java.net.InetSocketAddress;
 import java.net.ProxySelector;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.nio.ByteBuffer;
 import java.time.Duration;
+import java.util.concurrent.Flow.Subscriber;
 import hkspoilerviewer.api.RandoContext;
 import hkspoilerviewer.api.RandoContextRequest;
 import hkspoilerviewer.api.RandoServiceInterface;
@@ -22,7 +25,20 @@ public final class HttpRandoServiceImpl implements RandoServiceInterface {
 
   private <A, B> void doRequestAsync(A request, Callback<B> cb) {
     HttpRequest request = HttpRequest.newBuilder()
-        .POST(bodyPublisher)
+        .POST(BodyPublishers.ofStringnew BodyPublisher() {
+          
+          @Override
+          public void subscribe(Subscriber<? super ByteBuffer> subscriber) {
+            // TODO Auto-generated method stub
+            
+          }
+          
+          @Override
+          public long contentLength() {
+            // TODO Auto-generated method stub
+            return 0;
+          }
+        })
         .build();
     this.client.sendAsync(request, responseBodyHandler)
   }
