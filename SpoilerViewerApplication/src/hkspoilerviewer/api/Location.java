@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.collect.ImmutableList;
-import autovaluegson.factory.shaded.com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet;
 
 @AutoValue
 public abstract class Location {

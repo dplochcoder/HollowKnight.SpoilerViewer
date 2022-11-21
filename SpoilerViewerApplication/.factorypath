@@ -1,4 +1,10 @@
 <factorypath>
-    <factorypathentry kind="EXTJAR" id="C:\Users\danie\Dropbox\Private\Eclipse\dependencies\auto-value-1.9.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="EXTJAR" id="C:\Users\danie\Dropbox\Private\Eclipse\dependencies\auto-value-gson-1.3.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="C:\Users\danie\Dropbox\Private\Eclipse\dependencies\auto-value-gson-extension-1.3.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="C:\Users\danie\Dropbox\Private\Eclipse\dependencies\javapoet-1.9.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="C:\Users\danie\Dropbox\Private\Eclipse\dependencies\auto-value-gson-factory-1.3.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="C:\Users\danie\Dropbox\Private\Eclipse\dependencies\auto-value-annotations-1.10.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="C:\Users\danie\Dropbox\Private\Eclipse\dependencies\auto-value-1.10.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="C:\Users\danie\Dropbox\Private\Eclipse\dependencies\auto-value-gson-annotations-0.8.0.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="C:\Users\danie\Dropbox\Private\Eclipse\dependencies\gson-2.10.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="C:\Users\danie\Dropbox\Private\Eclipse\dependencies\autotransient-1.0.0.jar" enabled="true" runInBatchMode="false"/>
 </factorypath>

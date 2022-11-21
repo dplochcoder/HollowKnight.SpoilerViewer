@@ -2,7 +2,7 @@ package hkspoilerviewer.api;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import autovaluegson.factory.shaded.com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList;
 
 @AutoValue
 public abstract class Item {

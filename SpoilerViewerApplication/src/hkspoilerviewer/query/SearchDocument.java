@@ -4,7 +4,7 @@ import java.util.stream.Collectors;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.collect.ImmutableList;
-import autovaluegson.factory.shaded.com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet;
 import hkspoilerviewer.api.ItemPlacement;
 import hkspoilerviewer.api.Location;
 import hkspoilerviewer.api.Logic;
@@ -62,7 +62,7 @@ public abstract class SearchDocument {
   }
 
   public final ListItemRender render() {
-    var sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
     if (routed()) {
       sb.append("(R) ");
     }

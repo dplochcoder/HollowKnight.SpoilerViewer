@@ -5,6 +5,9 @@ import java.net.ProxySelector;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse.BodyHandler;
+import java.net.http.HttpResponse.BodySubscriber;
+import java.net.http.HttpResponse.ResponseInfo;
 import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.concurrent.Flow.Subscriber;
@@ -24,23 +27,17 @@ public final class HttpRandoServiceImpl implements RandoServiceInterface {
   }
 
   private <A, B> void doRequestAsync(A request, Callback<B> cb) {
-    HttpRequest request = HttpRequest.newBuilder()
-        .POST(BodyPublishers.ofStringnew BodyPublisher() {
-          
-          @Override
-          public void subscribe(Subscriber<? super ByteBuffer> subscriber) {
-            // TODO Auto-generated method stub
-            
-          }
-          
-          @Override
-          public long contentLength() {
-            // TODO Auto-generated method stub
-            return 0;
-          }
-        })
+    HttpRequest httpRequest = HttpRequest.newBuilder()
+        .POST(BodyPublishers.ofString("TODO"))
         .build();
-    this.client.sendAsync(request, responseBodyHandler)
+    this.client.sendAsync(httpRequest, new BodyHandler<String>() {
+
+		@Override
+		public BodySubscriber<String> apply(ResponseInfo responseInfo) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	});
   }
 
   private <A, B> void doRequestSync(A request, Callback<B> cb) {

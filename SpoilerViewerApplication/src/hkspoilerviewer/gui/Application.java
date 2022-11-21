@@ -1,6 +1,8 @@
 package hkspoilerviewer.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
+
 import javax.swing.JFrame;
 import hkspoilerviewer.api.RandoContext;
 import hkspoilerviewer.lib.DataProvider;
@@ -32,7 +34,7 @@ public final class Application extends JFrame {
     this.searchResultsPanel = new SearchResultsPanel(randoContext, bookmarks, routeInfo,
         searchDocumentFilter, searchDocumentSorter);
 
-    var cPane = getContentPane();
+    Container cPane = getContentPane();
     cPane.setLayout(new BorderLayout());
     cPane.add(this.searchResultsPanel, BorderLayout.CENTER);
 
