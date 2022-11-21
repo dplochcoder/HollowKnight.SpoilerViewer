@@ -1,21 +1,23 @@
 package hkspoilerviewer.lib;
 
-import java.net.InetSocketAddress;
-import java.net.ProxySelector;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
-import java.net.http.HttpResponse.BodyHandler;
-import java.net.http.HttpResponse.BodySubscriber;
-import java.net.http.HttpResponse.ResponseInfo;
-import java.nio.ByteBuffer;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.CompletableFuture;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import hkspoilerviewer.api.RandoContext;
 import hkspoilerviewer.api.RandoContextRequest;
 import hkspoilerviewer.api.RandoServiceInterface;
 
 public final class HttpRandoServiceImpl implements RandoServiceInterface {
+
+  private final Gson gson = new GsonBuilder().create();
 
   private final int port;
   private final HttpClient client;
@@ -26,25 +28,43 @@ public final class HttpRandoServiceImpl implements RandoServiceInterface {
         .connectTimeout(Duration.ofSeconds(60)).build();
   }
 
-  private <A, B> void doRequestAsync(A request, Callback<B> cb) {
-    HttpRequest httpRequest = HttpRequest.newBuilder()
-        .POST(BodyPublishers.ofString("TODO"))
-        .build();
-    this.client.sendAsync(httpRequest, new BodyHandler<String>() {
+  private <T> void invokeCallback(HttpResponse<String> resp, Class<T> clazz, Callback<T> cb) {
+    if (resp.statusCode() != 200) {
+      cb.error(new Exception(
+          String.format("Status code: %d; Error: %s", resp.statusCode(), resp.body())));
+      return;
+    }
 
-		@Override
-		public BodySubscriber<String> apply(ResponseInfo responseInfo) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-	});
+    T obj;
+    try {
+      obj = gson.fromJson(resp.body(), clazz);
+    } catch (Exception e) {
+      cb.error(e);
+      return;
+    }
+
+    cb.success(obj);
   }
 
-  private <A, B> void doRequestSync(A request, Callback<B> cb) {
+  private <A, B> void doRequestAsync(String methodName, A request, Class<B> clazz, Callback<B> cb) {
+    String body;
+    try {
+      body = gson.toJson(request);
+    } catch (Exception e) {
+      cb.error(e);
+      return;
+    }
 
+    HttpRequest httpRequest = HttpRequest.newBuilder().POST(BodyPublishers.ofString(body))
+        .uri(URI.create(String.format("http://localhost:%d/%s", port, methodName))).build();
+    CompletableFuture<HttpResponse<String>> future =
+        client.sendAsync(httpRequest, BodyHandlers.ofString(StandardCharsets.UTF_8));
+    future.thenAccept(resp -> invokeCallback(resp, clazz, cb));
   }
 
   @Override
-  public void getRandoContext(RandoContextRequest request, Callback<RandoContext> cb) {}
+  public void getRandoContext(RandoContextRequest request, Callback<RandoContext> cb) {
+    doRequestAsync("getRandoContext", request, RandoContext.class, cb);
+  }
 
 }
