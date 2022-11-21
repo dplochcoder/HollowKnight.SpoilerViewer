@@ -57,7 +57,7 @@ namespace SpoilerViewerMod.Server
         }
 
         private void RunSync(int port) {
-            string url = $"http://localhost:{port}/";
+            string url = $"http://*:{port}/";
             listener = new();
             listener.Prefixes.Add(url);
             listener.Start();
@@ -110,7 +110,7 @@ namespace SpoilerViewerMod.Server
             }
             catch (Exception e)
             {
-                SpoilerViewerMod.LogError($"500 Error: {e.Message}");
+                SpoilerViewerMod.LogError($"500 Error: {e}");
                 ctx.Response.StatusCode = 500;
                 var bytes = Encoding.UTF8.GetBytes(e.Message);
                 ctx.Response.OutputStream.Write(bytes, 0, bytes.Length);
@@ -146,7 +146,7 @@ namespace SpoilerViewerMod.Server
             Dictionary<API.ItemName, API.Item> items = new();
             Dictionary<API.LocationName, API.Location> locations = new();
 
-            foreach (var gp in ctx.Vanilla)
+            foreach (var gp in ctx.Vanilla ?? new())
             {
                 bool isTransition = gp.Location is LogicTransition;
 
@@ -165,7 +165,7 @@ namespace SpoilerViewerMod.Server
                 apiLoc.itemPlacementDatum.Add(ipd);
             }
 
-            foreach (var p in ctx.itemPlacements)
+            foreach (var p in ctx.itemPlacements ?? new())
             {
                 var apiLoc = GetLocation(locations, p.Location.Name);
                 apiLoc.mapAreaName ??= p.Location.LocationDef?.MapArea;
@@ -177,7 +177,7 @@ namespace SpoilerViewerMod.Server
                 apiLoc.itemPlacementDatum.Add(ipd);
             }
 
-            foreach (var p in ctx.transitionPlacements)
+            foreach (var p in ctx.transitionPlacements ?? new())
             {
                 var apiLoc = GetLocation(locations, p.Source.Name);
                 apiLoc.isTransition = true;
