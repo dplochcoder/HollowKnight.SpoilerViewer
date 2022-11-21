@@ -2,15 +2,16 @@ using ItemChanger.Internal.Menu;
 using Modding;
 using RandomizerMod;
 using PurenailCore.ModUtil;
-using RandomizerMod;
 using System.IO;
-using RandomizerMod.RC;
 
 namespace SpoilerViewerMod
 {
     public class SpoilerViewerMod : Mod, ICustomMenuMod
     {
         public static SpoilerViewerMod Instance { get; private set; }
+
+        public static new void Log(string msg) => ((ILogger)Instance).Log(msg);
+        public static new void LogError(string msg) => ((ILogger)Instance).LogError(msg);
 
         private static string ComputeJarFile()
         {

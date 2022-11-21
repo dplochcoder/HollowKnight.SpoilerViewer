@@ -3,6 +3,8 @@ package hkspoilerviewer.gui;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import hkspoilerviewer.api.RandoContext;
 import hkspoilerviewer.api.RandoServiceInterface;
 import hkspoilerviewer.api.RouteIntent;
@@ -46,9 +48,23 @@ public final class Application extends JFrame {
     cPane.setLayout(new BorderLayout());
     cPane.add(this.searchResultsPanel, BorderLayout.CENTER);
 
+    JMenuBar menu = new JMenuBar();
+    menu.add(aboutMenu());
+    setJMenuBar(menu);
+
     new RandoContextUpdater(randoService, routeIntent, randoContext).start();
 
     pack();
     setVisible(true);
+  }
+
+  private static JMenu aboutMenu() {
+    JMenu menu = new JMenu("About");
+
+    // TOOD: Version
+
+    menu.add(new LogMenuItem());
+
+    return menu;
   }
 }

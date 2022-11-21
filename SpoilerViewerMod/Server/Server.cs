@@ -46,6 +46,7 @@ namespace SpoilerViewerMod.Server
             listener.Start();
 
             // Launch the JAR and give it the port number.
+            SpoilerViewerMod.Log($"Launching JAR: {SpoilerViewerMod.JarFile}");
             Process process = new();
             process.StartInfo.FileName = "java";
             process.StartInfo.Arguments = $"-jar \"{SpoilerViewerMod.JarFile}\" {port}";
@@ -68,6 +69,7 @@ namespace SpoilerViewerMod.Server
                 switch (req.Url.AbsolutePath)
                 {
                     case "/getRandoContext":
+                        SpoilerViewerMod.Log("Received /getRandoContext request");
                         handleMethod<API.RandoContextRequest, API.RandoContext>(ctx, getRandoContext);
                         break;
                     default:
@@ -87,9 +89,11 @@ namespace SpoilerViewerMod.Server
                 using StreamReader sr = new(ctx.Request.InputStream);
                 var req = JsonUtil.DeserializeFromString<Req>(sr.ReadToEnd());
                 JsonUtil.Serialize(method(req), new StreamWriter(ctx.Response.OutputStream));
+                SpoilerViewerMod.Log("Successful response");
             }
             catch (Exception e)
             {
+                SpoilerViewerMod.LogError($"500 Error: {e.Message}");
                 ctx.Response.StatusCode = 500;
                 var bytes = Encoding.UTF8.GetBytes(e.Message);
                 ctx.Response.OutputStream.Write(bytes, 0, bytes.Length);
