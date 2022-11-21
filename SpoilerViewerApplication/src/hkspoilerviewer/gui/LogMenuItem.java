@@ -20,8 +20,8 @@ public final class LogMenuItem extends JMenuItem {
     DefaultListModel<String> model = new DefaultListModel<>();
     model.addAll(Log.readAll());
     JList<String> list = new JList<>(model);
-    JScrollPane scrollPane = new JScrollPane(list, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED,
-        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    JScrollPane scrollPane = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     popup.getContentPane().add(scrollPane);
     popup.pack();
     popup.setVisible(true);

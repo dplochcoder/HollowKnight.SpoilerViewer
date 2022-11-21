@@ -160,7 +160,7 @@ namespace SpoilerViewerMod.Server
                 var apiLoc = GetLocation(locations, p.Location.Name);
                 apiLoc.mapAreaName ??= p.Location.LocationDef?.MapArea;
                 apiLoc.titleAreaName ??= p.Location.LocationDef?.TitledArea;
-
+                
                 var apiItem = GetItem(items, p.Item.Name);
                 API.ItemPlacementData ipd = new(apiItem.name);
                 // TODO: Costs
