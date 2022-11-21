@@ -40,13 +40,21 @@ namespace SpoilerViewerMod
             return builder.CreateMenuScreen();
         }
 
+        private Server.Server? server;
+
         private void LaunchApplication()
         {
             var ctx = RandomizerMod.RandomizerMod.RS?.Context;
             if (ctx == null) return;
 
             // TODO: Global settings for port.
-            Server.Server server = new(ctx);
+
+            if (server != null)
+            {
+                server.Terminate();
+            }
+
+            server = new(ctx);
             server.RunAsync(6698);
         }
     }

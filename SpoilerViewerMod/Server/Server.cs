@@ -14,19 +14,19 @@ using System.Threading;
 
 namespace SpoilerViewerMod.Server
 {
-    using JsonUtil = PurenailCore.SystemUtil.JsonUtil<SpoilerViewerMod>;
+    using JsonUtil = JsonUtil<SpoilerViewerMod>;
 
     public class Server
     {
         private readonly RandoModContext ctx;
         private Thread? thread;
+        private HttpListener? listener;
+        private volatile bool terminated = false;
 
         public Server(RandoModContext ctx)
         {
             this.ctx = ctx;
         }
-
-        private byte[] buffer = new byte[1 << 20];
 
         public void RunAsync(int port)
         {
@@ -38,10 +38,17 @@ namespace SpoilerViewerMod.Server
             thread = new(() => RunSync(port));
             thread.Start();
         }
+        
+        public void Terminate()
+        {
+            terminated = true;
+            listener?.Abort();
+            thread?.Join();
+        }
 
         private void RunSync(int port) {
             string url = $"http://localhost:{port}/";
-            HttpListener listener = new();
+            listener = new();
             listener.Prefixes.Add(url);
             listener.Start();
 
@@ -54,7 +61,7 @@ namespace SpoilerViewerMod.Server
             process.StartInfo.CreateNoWindow = true;
             process.Start();
 
-            while (true)
+            while (!terminated)
             {
                 var ctx = listener.GetContext();
                 var req = ctx.Request;
