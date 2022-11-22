@@ -12,7 +12,6 @@ import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import hkspoilerviewer.gui.Log;
 
 public final class GsonInstance {
   private GsonInstance() {}
@@ -31,7 +30,6 @@ public final class GsonInstance {
       @Override
       public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
         if (!type.getRawType().equals(ImmutableList.class)) {
-          Log.log("List passing on: " + type.getRawType().getCanonicalName());
           return null;
         }
 
@@ -67,7 +65,6 @@ public final class GsonInstance {
       @Override
       public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
         if (!type.getRawType().equals(ImmutableSet.class)) {
-          Log.log("Set passing on: " + type.getRawType().getCanonicalName());
           return null;
         }
 
