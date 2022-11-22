@@ -7,7 +7,6 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import autovalue.shaded.com.google.common.collect.Maps;
-import hkspoilerviewer.gui.Log;
 
 public final class TypeAdapterRegistry {
   private TypeAdapterRegistry() {}
@@ -53,7 +52,6 @@ public final class TypeAdapterRegistry {
           clazz = clazz.getSuperclass();
         }
 
-        Log.log("TAF passing on: " + type.getRawType().getCanonicalName() + "; " + type);
         return null;
       }
     };
