@@ -2,9 +2,11 @@ package hkspoilerviewer.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JScrollPane;
 import hkspoilerviewer.api.RandoContext;
 import hkspoilerviewer.api.RandoServiceInterface;
 import hkspoilerviewer.api.RouteIntent;
@@ -46,7 +48,11 @@ public final class Application extends JFrame {
 
     Container cPane = getContentPane();
     cPane.setLayout(new BorderLayout());
-    cPane.add(this.searchResultsPanel, BorderLayout.CENTER);
+
+    JScrollPane srPanel = new JScrollPane(this.searchResultsPanel,
+        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    srPanel.setPreferredSize(new Dimension(400, 600));
+    cPane.add(srPanel, BorderLayout.CENTER);
 
     JMenuBar menu = new JMenuBar();
     menu.add(aboutMenu());

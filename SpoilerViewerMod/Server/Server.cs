@@ -4,6 +4,7 @@ using PurenailCore.SystemUtil;
 using RandomizerCore.Logic;
 using RandomizerMod.RandomizerData;
 using RandomizerMod.RC;
+using SpoilerViewerMod.Server.API;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -209,7 +210,30 @@ namespace SpoilerViewerMod.Server
             items.Values.ForEach(i => rc.items.Add(i));
             locations.Values.ForEach(l => rc.locations.Add(l));
 
-            // TODO: obtains and logic
+            var lm = ctx.LM;
+            ProgressionManager pm = new(lm, ctx);
+            pm.Add(ctx.InitialProgression);
+            pm.mu.DoUpdates();
+
+            Dictionary<ObtainIndices, Logic> logicMap = new();
+            foreach (var loc in locations.Values)
+            {
+                foreach (var oi in loc.obtainIndices)
+                {
+                    var term = lm.GetTerm(loc.Name);
+                    if (term != null)
+                    {
+                        logicMap[oi] = pm.Has(term.Id) ? Logic.IN_LOGIC : Logic.OUT_OF_LOGIC;
+                    }
+                    else
+                    {
+                        SpoilerViewerMod.Log($"Unknown loc: {loc.Name}");
+                    }
+                }
+            }
+
+            logicMap.Keys.ForEach(oi => rc.logic.baseMap.entries.Add(new(oi, logicMap[oi])));
+
             return rc;
         }
     }

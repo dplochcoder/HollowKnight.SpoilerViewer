@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using ItemChanger;
+using ItemChanger.Locations;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace SpoilerViewerMod.Server.API
@@ -35,7 +37,7 @@ namespace SpoilerViewerMod.Server.API
     public record Location
     {
         public readonly LocationName name;
-        public bool isShop;
+        public bool isShop => Finder.GetLocation(name.name) is ShopLocation;
         public bool isTransition;
         public string? mapAreaName;
         public string? titleAreaName;
@@ -43,6 +45,28 @@ namespace SpoilerViewerMod.Server.API
 
         [JsonIgnore]
         public string Name => name.name;
+
+        public List<ObtainIndices> obtainIndices => new(enumerateObtainIndices);
+
+        [JsonIgnore]
+        private IEnumerable<ObtainIndices> enumerateObtainIndices
+        {
+            get
+            {
+                if (isShop)
+                {
+                    for (int i = 0; i < itemPlacementDatum.Count; i++)
+                        yield return new(name, new() { new(i) });
+                }
+                else
+                {
+                    List<ItemPlacementIndex> list = new();
+                    for (int i = 0; i < itemPlacementDatum.Count; i++)
+                        list.Add(new(i));
+                    yield return new(name, list);
+                }
+            }
+        }
 
         public Location(LocationName name) { this.name = name; }
     }
@@ -70,13 +94,20 @@ namespace SpoilerViewerMod.Server.API
     {
         IN_LOGIC,
         IN_PURCHASE_LOGIC,
-        OUT_OF_LOGIC
+        OUT_OF_LOGIC,
+        UNKNOWN
     }
 
     public record LogicMapEntry
     {
         public ObtainIndices key;
         public Logic value;
+
+        public LogicMapEntry(ObtainIndices key, Logic value)
+        {
+            this.key = key;
+            this.value = value;
+        }
     }
 
     public record LogicMap

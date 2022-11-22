@@ -36,7 +36,7 @@ public abstract class RandoContext {
 
   @Memoized
   public ImmutableMap<ObtainIndices, Obtain> obtainsByIndices() {
-    return locations().stream().flatMap(Location::obtainIndices)
+    return locations().stream().flatMap(l -> l.obtainIndices().stream())
         .collect(ImmutableMap.toImmutableMap(oi -> oi, oi -> Obtain.create(this, oi)));
   }
 

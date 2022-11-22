@@ -1,12 +1,9 @@
 package hkspoilerviewer.api;
 
 import java.util.Optional;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 
@@ -34,15 +31,7 @@ public abstract class Location {
     return itemPlacementDatum().get(itemPlacementIndex.index());
   }
 
-  public final Stream<ObtainIndices> obtainIndices() {
-    if (isShop()) {
-      return IntStream.range(0, itemPlacementDatum().size())
-          .mapToObj(i -> ObtainIndices.create(name(), ImmutableSet.of(ItemPlacementIndex.of(i))));
-    } else {
-      return Stream.of(ObtainIndices.create(name(), IntStream.range(0, itemPlacementDatum().size())
-          .mapToObj(ItemPlacementIndex::of).collect(ImmutableSet.toImmutableSet())));
-    }
-  }
+  public abstract ImmutableList<ObtainIndices> obtainIndices();
 
   // TODO: Scene data, costs
 
@@ -67,6 +56,8 @@ public abstract class Location {
 
     public abstract Builder setItemPlacementDatum(
         ImmutableList<ItemPlacementData> itemPlacementDatum);
+
+    public abstract Builder setObtainIndices(ImmutableList<ObtainIndices> obtainIndices);
 
     public abstract Location build();
   }
