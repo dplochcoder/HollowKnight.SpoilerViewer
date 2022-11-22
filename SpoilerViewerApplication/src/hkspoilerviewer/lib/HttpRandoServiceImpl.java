@@ -8,6 +8,7 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import hkspoilerviewer.api.GsonInstance;
 import hkspoilerviewer.api.RandoContext;
@@ -40,7 +41,8 @@ public final class HttpRandoServiceImpl implements RandoServiceInterface {
     try {
       obj = GsonInstance.gson().fromJson(resp.body(), clazz);
     } catch (Exception e) {
-      Log.log("Raw JSON: " + resp.body());
+      Log.log("Raw JSON: ");
+      Arrays.stream(resp.body().split("\\n")).forEach(Log::log);
       cb.error(e);
       return;
     }

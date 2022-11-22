@@ -1,4 +1,5 @@
 ﻿using ItemChanger;
+using ItemChanger.Internal;
 using PurenailCore.SystemUtil;
 using RandomizerCore.Logic;
 using RandomizerMod.RandomizerData;
@@ -99,18 +100,32 @@ namespace SpoilerViewerMod.Server
 
         private delegate Resp RpcMethod<Req, Resp>(Req request);
 
+        private static byte[] SerializeObj<T>(T obj)
+        {
+            MemoryStream ms = new();
+            StreamWriter sw = new(ms);
+            JsonUtil.Serialize(obj, sw);
+            sw.Flush();
+            return ms.ToArray();
+        }
+
         private void handleMethod<Req, Resp>(HttpListenerContext ctx, RpcMethod<Req, Resp> method)
         {
             try
             {
                 using StreamReader sr = new(ctx.Request.InputStream);
                 var req = JsonUtil.DeserializeFromString<Req>(sr.ReadToEnd());
-                JsonUtil.Serialize(method(req), new StreamWriter(ctx.Response.OutputStream));
+
+                var data = SerializeObj(method(req));
+                ctx.Response.ContentLength64 = data.Length;
+                ctx.Response.OutputStream.Write(data, 0, data.Length);
+
                 SpoilerViewerMod.Log("Successful response");
             }
             catch (Exception e)
             {
                 SpoilerViewerMod.LogError($"500 Error: {e}");
+
                 ctx.Response.StatusCode = 500;
                 var bytes = Encoding.UTF8.GetBytes(e.Message);
                 ctx.Response.OutputStream.Write(bytes, 0, bytes.Length);
