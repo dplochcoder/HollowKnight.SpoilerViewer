@@ -46,6 +46,31 @@ public abstract class Location {
 
   // TODO: Scene data, costs
 
+  public abstract Builder toBuilder();
+
+  public static Builder builder() {
+    return new AutoValue_Location.Builder().setMapAreaName(Optional.empty())
+        .setTitleAreaName(Optional.empty());
+  }
+
+  @AutoValue.Builder
+  public abstract static class Builder {
+    public abstract Builder setName(LocationName name);
+
+    public abstract Builder setIsShop(boolean isShop);
+
+    public abstract Builder setIsTransition(boolean isTransition);
+
+    public abstract Builder setMapAreaName(Optional<String> mapAreaName);
+
+    public abstract Builder setTitleAreaName(Optional<String> mapAreaName);
+
+    public abstract Builder setItemPlacementDatum(
+        ImmutableList<ItemPlacementData> itemPlacementDatum);
+
+    public abstract Location build();
+  }
+
   public static TypeAdapter<Location> typeAdapter(Gson gson) {
     return new AutoValue_Location.GsonTypeAdapter(gson);
   }
