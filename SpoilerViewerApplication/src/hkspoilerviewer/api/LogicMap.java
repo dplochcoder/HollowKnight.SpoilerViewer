@@ -21,7 +21,7 @@ public abstract class LogicMap {
   }
 
   public final Logic logic(ObtainIndices obtainIndices) {
-    return map().get(obtainIndices);
+    return map().getOrDefault(obtainIndices, Logic.UNKNOWN);
   }
 
   public final LogicMap apply(Iterable<LogicMapDelta> deltas) {

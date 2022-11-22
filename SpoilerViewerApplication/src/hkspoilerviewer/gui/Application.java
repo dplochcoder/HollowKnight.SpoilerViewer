@@ -42,7 +42,7 @@ public final class Application extends JFrame {
     this.routeIntent = new DataProvider<>(RouteIntent.empty());
 
     this.searchResultsPanel = new SearchResultsPanel(randoContext, bookmarks, routeInfo,
-        searchDocumentFilter, searchDocumentSorter);
+        searchDocumentFilter, searchDocumentSorter, () -> pack());
 
     Container cPane = getContentPane();
     cPane.setLayout(new BorderLayout());

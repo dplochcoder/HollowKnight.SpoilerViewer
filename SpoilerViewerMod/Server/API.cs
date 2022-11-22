@@ -103,7 +103,7 @@ namespace SpoilerViewerMod.Server.API
 
     public record LogicMapSequence
     {
-        public LogicMap baseMap;
+        public LogicMap baseMap = new();
         public List<LogicMapSequenceEntry> entryList = new();
     }
 
