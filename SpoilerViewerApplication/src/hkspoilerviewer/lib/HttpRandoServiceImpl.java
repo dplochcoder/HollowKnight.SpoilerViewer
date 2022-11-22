@@ -13,6 +13,7 @@ import hkspoilerviewer.api.GsonInstance;
 import hkspoilerviewer.api.RandoContext;
 import hkspoilerviewer.api.RandoContextRequest;
 import hkspoilerviewer.api.RandoServiceInterface;
+import hkspoilerviewer.gui.Log;
 
 public final class HttpRandoServiceImpl implements RandoServiceInterface {
 
@@ -39,6 +40,7 @@ public final class HttpRandoServiceImpl implements RandoServiceInterface {
     try {
       obj = GsonInstance.gson().fromJson(resp.body(), clazz);
     } catch (Exception e) {
+      Log.log("Raw JSON: " + resp.body());
       cb.error(e);
       return;
     }

@@ -15,8 +15,4 @@ public abstract class ItemPlacementData {
   public static TypeAdapter<ItemPlacementData> typeAdapter(Gson gson) {
     return new AutoValue_ItemPlacementData.GsonTypeAdapter(gson);
   }
-
-  static {
-    TypeAdapterRegistry.register(ItemPlacementData.class, ItemPlacementData::typeAdapter);
-  }
 }

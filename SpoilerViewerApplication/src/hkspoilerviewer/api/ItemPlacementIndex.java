@@ -19,8 +19,4 @@ public abstract class ItemPlacementIndex {
   public static TypeAdapter<ItemPlacementIndex> typeAdapter(Gson gson) {
     return new AutoValue_ItemPlacementIndex.GsonTypeAdapter(gson);
   }
-
-  static {
-    TypeAdapterRegistry.register(ItemPlacementIndex.class, ItemPlacementIndex::typeAdapter);
-  }
 }

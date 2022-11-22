@@ -44,8 +44,4 @@ public abstract class LogicMap {
   public static TypeAdapter<LogicMap> typeAdapter(Gson gson) {
     return new AutoValue_LogicMap.GsonTypeAdapter(gson);
   }
-
-  static {
-    TypeAdapterRegistry.register(LogicMap.class, LogicMap::typeAdapter);
-  }
 }

@@ -49,8 +49,4 @@ public abstract class Location {
   public static TypeAdapter<Location> typeAdapter(Gson gson) {
     return new AutoValue_Location.GsonTypeAdapter(gson);
   }
-
-  static {
-    TypeAdapterRegistry.register(Location.class, Location::typeAdapter);
-  }
 }

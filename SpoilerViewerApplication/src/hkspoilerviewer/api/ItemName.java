@@ -19,8 +19,4 @@ public abstract class ItemName {
   public static TypeAdapter<ItemName> typeAdapter(Gson gson) {
     return new AutoValue_ItemName.GsonTypeAdapter(gson);
   }
-
-  static {
-    TypeAdapterRegistry.register(ItemName.class, ItemName::typeAdapter);
-  }
 }

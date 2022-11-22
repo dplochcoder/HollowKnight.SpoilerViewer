@@ -7,15 +7,35 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import autovalue.shaded.com.google.common.collect.Maps;
+import hkspoilerviewer.gui.Log;
 
 public final class TypeAdapterRegistry {
   private TypeAdapterRegistry() {}
 
-  private static Map<String, Function<Gson, ? extends TypeAdapter<?>>> adapters =
+  private static Map<Class<?>, Function<Gson, ? extends TypeAdapter<?>>> adapters =
       Maps.newConcurrentMap();
 
   public static <T> void register(Class<T> clazz, Function<Gson, TypeAdapter<T>> adapter) {
-    adapters.put(clazz.getCanonicalName(), adapter);
+    adapters.put(clazz, adapter);
+  }
+
+  static {
+    register(Item.class, Item::typeAdapter);
+    register(ItemName.class, ItemName::typeAdapter);
+    register(ItemPlacementData.class, ItemPlacementData::typeAdapter);
+    register(ItemPlacementIndex.class, ItemPlacementIndex::typeAdapter);
+    register(Location.class, Location::typeAdapter);
+    register(LocationName.class, LocationName::typeAdapter);
+    register(LogicMap.class, LogicMap::typeAdapter);
+    register(LogicMapDelta.class, LogicMapDelta::typeAdapter);
+    register(LogicMapDeltaEntry.class, LogicMapDeltaEntry::typeAdapter);
+    register(LogicMapEntry.class, LogicMapEntry::typeAdapter);
+    register(LogicMapSequence.class, LogicMapSequence::typeAdapter);
+    register(LogicMapSequenceEntry.class, LogicMapSequenceEntry::typeAdapter);
+    register(ObtainIndices.class, ObtainIndices::typeAdapter);
+    register(RandoContext.class, RandoContext::typeAdapter);
+    register(RandoContextRequest.class, RandoContextRequest::typeAdapter);
+    register(RouteIntent.class, RouteIntent::typeAdapter);
   }
 
   public static TypeAdapterFactory factory() {
@@ -23,9 +43,18 @@ public final class TypeAdapterRegistry {
       @SuppressWarnings("unchecked")
       @Override
       public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-        Function<Gson, ? extends TypeAdapter<?>> fn =
-            adapters.get(type.getRawType().getCanonicalName());
-        return (TypeAdapter<T>) (fn != null ? fn.apply(gson) : null);
+        Class<?> clazz = type.getRawType();
+        while (clazz != null) {
+          Function<Gson, ? extends TypeAdapter<?>> fn = adapters.get(clazz);
+          if (fn != null) {
+            return (TypeAdapter<T>) fn.apply(gson);
+          }
+
+          clazz = clazz.getSuperclass();
+        }
+
+        Log.log("TAF passing on: " + type.getRawType().getCanonicalName() + "; " + type);
+        return null;
       }
     };
   }
